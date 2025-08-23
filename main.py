@@ -1,12 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def hello():
-    return jsonify({"message": "Hello Flask API APP"})
+    message = {"message": "Hello Flask API APP"}
 
+    if request.headers.get("Accept") == "application/json":
+        return jsonify(message)
+    return render_template("index.html", data=message)
 
 @app.route("/calculate", methods=['POST'])
 def calculate():
