@@ -8,4 +8,4 @@ class Author(db.Model):
     birth_date = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}>: {self.first_name} {self.last_name}"
+        return f"<{self.__class__.__name__}>: {self.id} {self.first_name} {self.last_name}"

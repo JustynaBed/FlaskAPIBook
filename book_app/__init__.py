@@ -2,11 +2,13 @@ from flask import Flask, jsonify, request, render_template
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 # from sqlalchemy.sql import text
+from flask_migrate import Migrate
 
 app = Flask(__name__, template_folder='templates')
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 # with app.app_context():
 #     results = db.session.execute(text('show databases'))
@@ -15,6 +17,7 @@ db = SQLAlchemy(app)
 
 from book_app import authors
 from book_app import models
+from book_app import db_manage_commands
 
 @app.route("/")
 def hello():
