@@ -18,18 +18,21 @@ migrate = Migrate(app, db)
 from book_app import authors
 from book_app import models
 from book_app import db_manage_commands
+from book_app.models import Author, AuthorSchema
 
 @app.route("/")
 def hello():
-    message = {"message": "Hellodd Flask API APP"}
+    authors = Author.query.all()
+    author_schema = AuthorSchema(many=True)
+    authors_data = author_schema.dump(authors)
+
+    message = {
+        "message": "Hello Flask API APP",
+        "authors": authors_data,
+        "count": len(authors_data)
+    }
 
     if request.headers.get("Accept") == "application/json":
         return jsonify(message)
-    return render_template("index.html", data=message)
 
-@app.route("/calculate", methods=['POST'])
-def calculate():
-    request_data = request.get_json()
-    user_request = request_data['expression']
-    result = eval(user_request)
-    return jsonify({'response': result})
+    return render_template("index.html", data=message)
