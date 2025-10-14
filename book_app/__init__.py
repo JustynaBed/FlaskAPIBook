@@ -1,14 +1,18 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 # from sqlalchemy.sql import text
 from flask_migrate import Migrate
+from flask_cors import CORS
 
-app = Flask(__name__, template_folder='templates')
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
+# app = Flask(__name__, template_folder='templates')
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+CORS(app)
 
 # with app.app_context():
 #     results = db.session.execute(text('show databases'))
@@ -35,4 +39,4 @@ def hello():
     if request.headers.get("Accept") == "application/json":
         return jsonify(message)
 
-    return render_template("index.html", data=message)
+    return send_from_directory(app.static_folder, "index.html")
