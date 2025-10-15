@@ -26,11 +26,7 @@ def hello():
     author_schema = AuthorSchema(many=True)
     authors_data = author_schema.dump(authors)
 
-    message = {
-        "message": "Hello Flask API APP",
-        "authors": authors_data,
-        "count": len(authors_data)
-    }
+    message = {"message": "Hello Flask API APP"}
 
     if request.headers.get("Accept") == "application/json":
         return jsonify(message)
