@@ -15,4 +15,4 @@ class AuthorSchema(Schema):
     id = fields.Integer()
     first_name = fields.String()
     last_name = fields.String()
-    birth_date = fields.Date('%d-%m-%Y')
+    birth_date = fields.Date(format='%d-%m-%Y')
