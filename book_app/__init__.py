@@ -18,13 +18,13 @@ migrate = Migrate(app, db)
 from book_app import authors
 from book_app import models
 from book_app import db_manage_commands
-from book_app.models import Author, AuthorSchema
+# from book_app.models import Author, AuthorSchema
 
 @app.route("/")
 def hello():
-    authors = Author.query.all()
-    author_schema = AuthorSchema(many=True)
-    authors_data = author_schema.dump(authors)
+    # authors = Author.query.all()
+    # author_schema = AuthorSchema(many=True)
+    # authors_data = author_schema.dump(authors)
 
     message = {"message": "Hello Flask API APP"}
 
