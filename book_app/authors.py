@@ -1,6 +1,8 @@
-from flask import jsonify
-from book_app import app
-from book_app.models import Author, AuthorSchema
+from flask import jsonify, request
+from webargs.flaskparser import use_args
+from book_app import app, db
+from book_app.models import Author, AuthorSchema, author_schema
+
 
 @app.route('/api/v1/authors', methods=['GET'])
 def get_authors():
@@ -14,8 +16,14 @@ def get_authors():
     })
 
 @app.route('/api/v1/authors', methods=['POST'])
-def create_author():
+@use_args(author_schema)
+def create_author(args: dict):
+    author = Author(**args)
+
+    db.session.add(author)
+    db.session.commit()
+
     return jsonify({
         'success': True,
-        'data': 'New author has been created'
+        'data': author_schema.dump(author)
     }), 201

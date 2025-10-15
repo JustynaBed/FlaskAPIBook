@@ -23,5 +23,6 @@ PyMySQL==1.1.2
 python-dotenv==1.0.1
 SQLAlchemy==2.0.43
 typing_extensions==4.13.2
+webargs==8.6.0
 Werkzeug==3.0.6
 zipp==3.20.2
