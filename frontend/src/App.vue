@@ -1,4 +1,5 @@
 <script setup>
+import CreateAuthor from './CreateAuthor.vue'
 import { ref, onMounted } from "vue"
 
 const authors = ref([])
@@ -40,4 +41,5 @@ function fetchAuthors() {
       {{ author.first_name }}
     </li>
   </ul>
+  <create-author/>
 </template> 
