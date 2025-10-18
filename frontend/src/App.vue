@@ -1,3 +1,16 @@
+<template>
+  <h1>{{ message }}</h1>
+  <p>Liczba autorów: {{ count }}</p>
+
+  <ul>
+    <li v-for="author in authors" :key="author.id">
+      {{ author.first_name }} 
+      <button @click="deleteAuthor(author.id)">Delete</button>
+    </li>
+  </ul>
+  <create-author/>
+</template> 
+
 <script setup>
 import CreateAuthor from './CreateAuthor.vue'
 import { ref, onMounted } from "vue"
@@ -30,16 +43,24 @@ function fetchAuthors() {
     message.value = 'Błąd połączenia z serwerem'
   })
 }
+
+function deleteAuthor(authorId) { 
+  fetch(`/api/v1/authors/${authorId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to delete author')
+    }
+    // Refresh the authors list after deletion
+    fetchAuthors()
+  })
+  .catch(error => {
+    console.error('Delete error:', error)
+    alert('Błąd podczas usuwania autora')
+  })
+}
 </script>
-
-<template>
-  <h1>{{ message }}</h1>
-  <p>Liczba autorów: {{ count }}</p>
-
-  <ul>
-    <li v-for="author in authors" :key="author.id">
-      {{ author.first_name }}
-    </li>
-  </ul>
-  <create-author/>
-</template> 

@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from book_app import app, db
-from book_app.models import Author, AuthorSchema
+from book_app.models import Author, AuthorSchema, author_schema
 from datetime import datetime
 
 @app.route('/api/v1/authors', methods=['GET'])
@@ -12,6 +12,15 @@ def get_authors():
         'success': True,
         'data': author_schema.dump(authors),
         'number_of_records':len(authors)
+    })
+
+@app.route('/api/v1/authors/<int:author_id>', methods=['GET'])
+def get_author(author_id: int):
+    author = Author.query.get_or_404(author_id, description=f'Author with id {author_id} not found')
+
+    return jsonify({
+        'success': True,
+        'data': author_schema.dump(author)
     })
 
 @app.route('/api/v1/authors', methods=['POST'])
@@ -30,3 +39,15 @@ def create_author():
         'success': True,
         'data': 'New author has been created'
     }), 201
+
+@app.route('/api/v1/authors/<int:author_id>', methods=['DELETE'])
+def delete_author(author_id: int):
+    author = Author.query.get_or_404(author_id, description=f'Author with id {author_id} not found')
+
+    db.session.delete(author)
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'data': f'Author with id {author_id} has been deleted'
+    })
