@@ -5,30 +5,26 @@
     :authors="authors"
     @delete-author="deleteAuthor"
   />
-  <AuthorForm @author-added="fetchAuthors" />
+  <AuthorForm @author-added="getAuthors" />
 </template> 
 
 <script setup>
 import AuthorList from './AuthorsList.vue'
 import AuthorForm from './AuthorForm.vue'
 import { ref, onMounted } from 'vue'
+import * as API from './api.js'
 
 const authors = ref([])
 const message = ref('')
 const count = ref(0)
 
 onMounted(() => {
-  fetchAuthors()
+  getAuthors()
 })
 
-function fetchAuthors() {
-  fetch('/api/v1/authors', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((response) => response.json())
+const getAuthors = () => {
+  console.log('1')
+  API.fetchAuthors()
     .then((data) => {
       authors.value = data.data
       count.value = data.number_of_records
@@ -38,6 +34,22 @@ function fetchAuthors() {
       console.error('Fetch error:', error)
       message.value = 'Błąd połączenia z serwerem'
     })
+  // fetch('/api/v1/authors', {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  // })
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     authors.value = data.data
+  //     count.value = data.number_of_records
+  //     message.value = data.success ? 'Lista autorów' : 'Błąd podczas pobierania danych'
+  //   })
+  //   .catch((error) => {
+  //     console.error('Fetch error:', error)
+  //     message.value = 'Błąd połączenia z serwerem'
+  //   })
 }
 
 function deleteAuthor(authorId) {
@@ -52,7 +64,7 @@ function deleteAuthor(authorId) {
         throw new Error('Failed to delete author')
       }
       // Refresh the authors list after deletion
-      fetchAuthors()
+      getAuthors()
     })
     .catch((error) => {
       console.error('Delete error:', error)
