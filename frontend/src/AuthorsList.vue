@@ -10,7 +10,7 @@
 <script setup>
 import AuthorItem from './AuthorItem.vue'   
 import {defineEmits, defineProps} from 'vue';
-import { AuthorsListEvent } from './constants.js'
+import { AuthorsListEvent } from './constants';
 
 defineProps({
   authors: {
