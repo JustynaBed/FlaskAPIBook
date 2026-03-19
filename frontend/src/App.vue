@@ -23,7 +23,6 @@ onMounted(() => {
 })
 
 const getAuthors = () => {
-  console.log('1')
   API.fetchAuthors()
     .then((data) => {
       authors.value = data.data
@@ -34,41 +33,20 @@ const getAuthors = () => {
       console.error('Fetch error:', error)
       message.value = 'Błąd połączenia z serwerem'
     })
-  // fetch('/api/v1/authors', {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  // })
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     authors.value = data.data
-  //     count.value = data.number_of_records
-  //     message.value = data.success ? 'Lista autorów' : 'Błąd podczas pobierania danych'
-  //   })
-  //   .catch((error) => {
-  //     console.error('Fetch error:', error)
-  //     message.value = 'Błąd połączenia z serwerem'
-  //   })
 }
 
 function deleteAuthor(authorId) {
-  fetch(`/api/v1/authors/${authorId}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  API.deleteAuthor(authorId)
     .then((response) => {
-      if (!response.ok) {
+      console.log('Delete response:', response)
+         if (!response.success) {
         throw new Error('Failed to delete author')
       }
-      // Refresh the authors list after deletion
       getAuthors()
     })
     .catch((error) => {
       console.error('Delete error:', error)
       alert('Błąd podczas usuwania autora')
-    })
+    })  
 }
 </script>
