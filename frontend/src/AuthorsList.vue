@@ -10,7 +10,7 @@
 <script setup>
 import AuthorItem from './AuthorItem.vue'   
 import {defineEmits, defineProps} from 'vue';
-import { AuthorsListEvent } from './constants';
+// import { AuthorsListEvent } from './constants.js';
 
 defineProps({
   authors: {
@@ -22,6 +22,7 @@ defineProps({
 const emit = defineEmits(['delete-author'])
 
 function onDelete(id) {
-  emit(AuthorsListEvent.DELETE_AUTHOR, id)
+  // emit(AuthorsListEvent.DELETE_AUTHOR, id)
+  emit('delete-author', id)
 }
 </script>
