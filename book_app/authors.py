@@ -37,7 +37,7 @@ def create_author():
 
     return jsonify({
         'success': True,
-        'data': 'New author has been created'
+        'data': author_schema.dump(author)
     }), 201
 
 @app.route('/api/v1/authors/<int:author_id>', methods=['PUT'])
