@@ -90,7 +90,7 @@ async function submitForm() {
 
     if (isEditMode.value) {
       payload.id = props.author.id
-      await store.dispatch('authors/editAuthor', payload)
+      await store.dispatch('authors/updateAuthor', payload)
     } else {
       await store.dispatch('authors/createAuthor', payload)
     }

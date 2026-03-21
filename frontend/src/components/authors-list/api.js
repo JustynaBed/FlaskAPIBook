@@ -15,7 +15,7 @@ export const createAuthor = (data) => {
     .then(response => response.data)
 }
 
-export const editAuthor = (data) => {
+export const updateAuthor = (data) => {
   return axios.put(`/api/v1/authors/${data.id}`, data)
     .then(response => response.data)
 } 

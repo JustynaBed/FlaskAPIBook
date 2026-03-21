@@ -42,8 +42,8 @@ export default {
           return response
         })
     },
-    editAuthor({ commit }, authorData) {
-      return API.editAuthor(authorData)
+    updateAuthor({ commit }, authorData) {
+      return API.updateAuthor(authorData)
         .then(response => {
           commit('UPDATE_AUTHOR', response.data)
           return response
