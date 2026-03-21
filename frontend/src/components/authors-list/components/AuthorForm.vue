@@ -12,13 +12,25 @@
       <label for="birth_date">Birth Date:</label>
       <input id="birth_date" type="date" v-model="form.birth_date" required />
     </div>
-    <button type="submit">Add Author</button>
+    <button type="submit">
+      {{ isEditMode ? 'Update Author' : 'Add Author'}}
+    </button>
+        <button v-if="isEditMode" type="button" @click="resetForm">
+      Cancel
+    </button>
   </form>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { useStore } from 'vuex'
+
+const props = defineProps({
+  author: {
+    type: Object,
+    default: null
+  }
+})
 
 const form = reactive({
   first_name: '',
@@ -26,26 +38,64 @@ const form = reactive({
   birth_date: ''
 })
 
-const store = useStore()
+watch(() => props.author, (author) => {
+  if (author) {
 
-async function submitForm() {
-  try {
-    const [year, month, day] = form.birth_date.split('-')
-    const formattedDate = `${day}-${month}-${year}`
-
-   await store.dispatch('authors/createAuthor', {
-      first_name: form.first_name,
-      last_name: form.last_name,
-      birth_date: formattedDate
-    })
-
-    alert('Author added!')
-
+    form.first_name = author.first_name || ''
+    form.last_name = author.last_name || ''
+    form.birth_date = formatDateToISO(author.birth_date)
+  } else {
     form.first_name = ''
     form.last_name = ''
     form.birth_date = ''
+  }
+}, { immediate: true })
 
+function formatDateToISO(dateStr) {
+  if (!dateStr) return ''
+  const [day, month, year] = dateStr.split('-')
+  return `${year}-${month}-${day}`
+}
 
+function formatDateFromISO(dateStr) {
+  if (!dateStr) return ''
+  const [year, month, day] = dateStr.split('-')
+  return `${day}-${month}-${year}`
+}
+
+const emit = defineEmits(['cancel', 'saved'])
+
+const isEditMode = computed(() => {
+  return props.author !== null && props.author !== undefined
+})
+
+const store = useStore()
+
+function resetForm() {
+  form.first_name = ''
+  form.last_name = ''
+  form.birth_date = ''
+  emit('cancel')
+}
+
+async function submitForm() {
+  try {
+    const formattedDate = formatDateFromISO(form.birth_date)
+
+    const payload = {
+      first_name: form.first_name,
+      last_name: form.last_name,
+      birth_date: formattedDate
+    }
+
+    if (isEditMode.value) {
+      payload.id = props.author.id
+      await store.dispatch('authors/editAuthor', payload)
+    } else {
+      await store.dispatch('authors/createAuthor', payload)
+    }
+    resetForm()
+    emit('saved')
   } catch (error) {
     alert(error.response?.data?.message || error.message)
   }

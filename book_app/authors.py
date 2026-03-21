@@ -56,7 +56,7 @@ def update_author(author_id):
 
     return jsonify({
         'success': True,
-        'data': f"Author with id {author_id} has been updated"
+        'data': author_schema.dump(author)
     })
 
 @app.route('/api/v1/authors/<int:author_id>', methods=['DELETE'])

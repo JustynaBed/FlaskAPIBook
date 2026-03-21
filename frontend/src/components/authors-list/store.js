@@ -14,6 +14,12 @@ export default {
     },
     ADD_AUTHOR(state, author) {
       state.authors.push(author);
+    },
+    UPDATE_AUTHOR(state, updatedAuthor) {
+      const index = state.authors.findIndex(author => author.id === updatedAuthor.id);
+      if (index !== -1) {
+        state.authors.splice(index, 1, updatedAuthor);
+      }
     }
   },
   actions: {
@@ -33,6 +39,13 @@ export default {
       return API.createAuthor(authorData)
         .then(response => {
           commit('ADD_AUTHOR', response.data)
+          return response
+        })
+    },
+    editAuthor({ commit }, authorData) {
+      return API.editAuthor(authorData)
+        .then(response => {
+          commit('UPDATE_AUTHOR', response.data)
           return response
         })
     }
